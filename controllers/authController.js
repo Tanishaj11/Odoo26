@@ -36,7 +36,7 @@ const register = asyncHandler(async (req, res) => {
     throw new AppError('Password must be at least 8 characters long', 400);
   }
 
-  const roleResult = await pool.query('SELECT id FROM roles WHERE id = $1', [role_id]);
+  const roleResult = await pool.query('SELECT id FROM roles WHERE user_id = $1', [role_id]);
 
   if (roleResult.rowCount === 0) {
     throw new AppError('Invalid role_id', 400);
@@ -48,7 +48,7 @@ const register = asyncHandler(async (req, res) => {
     const result = await pool.query(
       `INSERT INTO users (full_name, email, password_hash, phone, role_id)
        VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, full_name, email, phone, role_id, created_at`,
+       RETURNING user_id, full_name, email, phone, role_id, created_at`,
       [full_name.trim(), normalizedEmail, passwordHash, String(phone).trim(), role_id]
     );
 
@@ -76,9 +76,9 @@ const login = asyncHandler(async (req, res) => {
   const normalizedEmail = String(email).trim().toLowerCase();
 
   const result = await pool.query(
-    `SELECT u.id, u.full_name, u.password_hash, r.role_name
+    `SELECT u.user_id, u.full_name, u.password_hash, r.role_name
      FROM users u
-     INNER JOIN roles r ON r.id = u.role_id
+     INNER JOIN roles r ON r.user_id = u.role_id
      WHERE u.email = $1`,
     [normalizedEmail]
   );
@@ -101,7 +101,7 @@ const login = asyncHandler(async (req, res) => {
     message: 'Login successful',
     data: {
       token,
-      user_id: user.id,
+      user_id: user.user_id,
       full_name: user.full_name,
       role_name: user.role_name,
     },
@@ -110,10 +110,10 @@ const login = asyncHandler(async (req, res) => {
 
 const getProfile = asyncHandler(async (req, res) => {
   const result = await pool.query(
-    `SELECT u.id, u.full_name, u.email, u.phone, u.role_id, r.role_name, u.created_at, u.updated_at
+    `SELECT u.user_id, u.full_name, u.email, u.phone, u.role_id, r.role_name, u.created_at, u.updated_at
      FROM users u
-     INNER JOIN roles r ON r.id = u.role_id
-     WHERE u.id = $1`,
+     INNER JOIN roles r ON r.user_id = u.role_id
+     WHERE u.user_id = $1`,
     [req.user.user_id]
   );
 
