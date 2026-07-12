@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics - TransitOps ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/analytics.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js CDN for beautiful interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <i data-lucide="compass" class="logo-icon"></i>
+          <span class="logo-text">TransitOps</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="trips.html" class="nav-item">
+          <i data-lucide="route" class="nav-icon"></i>
+          <span>Trip Dispatcher</span>
+        </a>
+        <a href="analytics.html" class="nav-item active">
+          <i data-lucide="bar-chart-3" class="nav-icon"></i>
+          <span>Analytics</span>
+        </a>
+        <a href="rbac.html" class="nav-item">
+          <i data-lucide="shield-check" class="nav-icon"></i>
+          <span>Access Control</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings" class="nav-icon"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User avatar" class="avatar">
+          <div class="user-info">
+            <span class="user-name">Sarah Jenkins</span>
+            <span class="user-role">Lead Dispatcher</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h1 class="page-title">Reports & Analytics</h1>
+        </div>
+        <div class="navbar-right">
+          <div class="date-filter-wrapper">
+            <label for="dateRange" class="sr-only">Date Range</label>
+            <select id="dateRange" class="date-select">
+              <option value="7d">Last 7 Days</option>
+              <option value="30d" selected>Last 30 Days</option>
+              <option value="90d">Last 90 Days</option>
+              <option value="12m">Last 12 Months</option>
+            </select>
+          </div>
+          <div class="export-actions">
+            <button class="btn btn-secondary btn-sm" id="exportCsvBtn">
+              <i data-lucide="file-spreadsheet"></i>
+              <span>CSV</span>
+            </button>
+            <button class="btn btn-primary btn-sm" id="exportPdfBtn">
+              <i data-lucide="file-text"></i>
+              <span>PDF Report</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Inner Content -->
+      <div class="content-body">
+        <!-- KPI Cards Grid -->
+        <section class="kpi-grid">
+          <!-- Card 1: Fleet Utilization -->
+          <div class="card kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Fleet Utilization</span>
+              <div class="kpi-icon-wrapper success">
+                <i data-lucide="percent"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiFleetUtilization">86.4%</div>
+            <div class="kpi-change positive">
+              <i data-lucide="trending-up"></i>
+              <span>+3.2% from last month</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Fuel Efficiency -->
+          <div class="card kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Avg Fuel Efficiency</span>
+              <div class="kpi-icon-wrapper info">
+                <i data-lucide="fuel"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiFuelEfficiency">3.2 km/L</div>
+            <div class="kpi-change positive">
+              <i data-lucide="trending-up"></i>
+              <span>+0.4% from last month</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Total Revenue -->
+          <div class="card kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Total Revenue</span>
+              <div class="kpi-icon-wrapper success">
+                <i data-lucide="dollar-sign"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiRevenue">$142,500</div>
+            <div class="kpi-change positive">
+              <i data-lucide="trending-up"></i>
+              <span>+12.4% from last month</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Operational Cost -->
+          <div class="card kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Operational Cost</span>
+              <div class="kpi-icon-wrapper warning">
+                <i data-lucide="activity"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiOperationalCost">$84,120</div>
+            <div class="kpi-change negative">
+              <i data-lucide="trending-down"></i>
+              <span>+5.1% from last month</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Vehicle ROI -->
+          <div class="card kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Avg Vehicle ROI</span>
+              <div class="kpi-icon-wrapper success">
+                <i data-lucide="award"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiRoi">24.8%</div>
+            <div class="kpi-change positive">
+              <i data-lucide="trending-up"></i>
+              <span>+1.8% average</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Maintenance Cost -->
+          <div class="card kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Maintenance Cost</span>
+              <div class="kpi-icon-wrapper danger">
+                <i data-lucide="wrench"></i>
+              </div>
+            </div>
+            <div class="kpi-value" id="kpiMaintenanceCost">$9,340</div>
+            <div class="kpi-change positive">
+              <i data-lucide="trending-down"></i>
+              <span>-8.2% from last month</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-layout">
+          <!-- Main Chart: Monthly Revenue -->
+          <div class="card chart-card large-chart">
+            <div class="card-header">
+              <div class="header-icon-title">
+                <i data-lucide="bar-chart-2" class="icon-blue"></i>
+                <h2>Monthly Revenue vs Operational Costs</h2>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="revenueBarChart"></canvas>
+            </div>
+          </div>
+
+          <div class="charts-side-grid">
+            <!-- Line Chart: Fuel Consumption -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="trending-up" class="icon-blue"></i>
+                  <h2>Fuel Consumption (Liters)</h2>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="fuelLineChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Pie Chart: Trips Completed by Status -->
+            <div class="card chart-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="pie-chart" class="icon-blue"></i>
+                  <h2>Trips Completed by Region</h2>
+                </div>
+              </div>
+              <div class="chart-container-pie">
+                <canvas id="tripsPieChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Top Performers Section -->
+        <section class="performers-layout">
+          <!-- Top Vehicles -->
+          <div class="card performers-card">
+            <div class="card-header">
+              <div class="header-icon-title">
+                <i data-lucide="truck" class="icon-blue"></i>
+                <h2>Top Performing Vehicles</h2>
+              </div>
+            </div>
+            <div class="performers-list" id="topVehiclesList">
+              <!-- Rendered Dynamically -->
+            </div>
+          </div>
+
+          <!-- Top Drivers -->
+          <div class="card performers-card">
+            <div class="card-header">
+              <div class="header-icon-title">
+                <i data-lucide="users" class="icon-blue"></i>
+                <h2>Top Drivers (Safety & Efficiency)</h2>
+              </div>
+            </div>
+            <div class="performers-list" id="topDriversList">
+              <!-- Rendered Dynamically -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+  <script src="js/analytics.js" defer></script>
+</body>
+</html>

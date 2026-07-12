@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Dispatcher - TransitOps ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/trips.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <i data-lucide="compass" class="logo-icon"></i>
+          <span class="logo-text">TransitOps</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="trips.html" class="nav-item active">
+          <i data-lucide="route" class="nav-icon"></i>
+          <span>Trip Dispatcher</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3" class="nav-icon"></i>
+          <span>Analytics</span>
+        </a>
+        <a href="rbac.html" class="nav-item">
+          <i data-lucide="shield-check" class="nav-icon"></i>
+          <span>Access Control</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings" class="nav-icon"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User avatar" class="avatar">
+          <div class="user-info">
+            <span class="user-name">Sarah Jenkins</span>
+            <span class="user-role">Lead Dispatcher</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h1 class="page-title">Trip Dispatcher</h1>
+        </div>
+        <div class="navbar-right">
+          <div class="search-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="tripSearch" placeholder="Search trips, vehicles, or drivers...">
+          </div>
+          <div class="icon-button-wrapper">
+            <button class="icon-button" id="notificationBtn">
+              <i data-lucide="bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+            <!-- Dropdown placeholder -->
+            <div class="notifications-dropdown hidden" id="notificationsDropdown">
+              <div class="dropdown-header">
+                <h3>Notifications</h3>
+                <button class="clear-all-btn">Clear All</button>
+              </div>
+              <div class="notification-list">
+                <div class="notification-item unread">
+                  <div class="notification-status danger"></div>
+                  <div class="notification-content">
+                    <p><strong>Vehicle #TRK-8802</strong> reported engine overheat warning.</p>
+                    <span>2 mins ago</span>
+                  </div>
+                </div>
+                <div class="notification-item unread">
+                  <div class="notification-status success"></div>
+                  <div class="notification-content">
+                    <p><strong>Trip #TX-4091</strong> has been successfully completed.</p>
+                    <span>15 mins ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-dropdown-wrapper">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User avatar" class="avatar-clickable" id="profileMenuBtn">
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Inner Content -->
+      <div class="content-body">
+        <div class="grid-layout">
+          <!-- Left Column: Form & Board -->
+          <div class="left-column">
+            <!-- Create Trip Section -->
+            <section class="card trip-creator-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="plus-circle" class="icon-blue"></i>
+                  <h2>Create & Dispatch Trip</h2>
+                </div>
+                <span class="badge badge-info">Validation Enabled</span>
+              </div>
+              <form id="createTripForm" class="trip-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="vehicleSelect">Select Vehicle</label>
+                    <select id="vehicleSelect" required>
+                      <option value="" disabled selected>Select an available vehicle</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="driverSelect">Select Driver</label>
+                    <select id="driverSelect" required>
+                      <option value="" disabled selected>Select an available driver</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="cargoWeight">Cargo Weight (kg)</label>
+                    <input type="number" id="cargoWeight" placeholder="e.g. 5000" min="1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="routeDistance">Estimated Distance (km)</label>
+                    <input type="number" id="routeDistance" placeholder="e.g. 450" min="1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="startLocation">Start Location</label>
+                    <input type="text" id="startLocation" placeholder="Origin Hub" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="endLocation">Destination</label>
+                    <input type="text" id="endLocation" placeholder="Destination Hub" required>
+                  </div>
+                </div>
+
+                <!-- Validation Feedback Panel -->
+                <div class="validation-feedback" id="validationFeedback">
+                  <div class="validation-item" id="valDriver">
+                    <i data-lucide="circle-dashed" class="val-icon"></i>
+                    <span>Select driver to verify status</span>
+                  </div>
+                  <div class="validation-item" id="valVehicle">
+                    <i data-lucide="circle-dashed" class="val-icon"></i>
+                    <span>Select vehicle to verify status</span>
+                  </div>
+                  <div class="validation-item" id="valCargo">
+                    <i data-lucide="circle-dashed" class="val-icon"></i>
+                    <span>Enter cargo weight to validate capacity</span>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" id="saveDraftBtn" class="btn btn-secondary">Save Draft</button>
+                  <button type="submit" id="dispatchBtn" class="btn btn-primary" disabled>
+                    <i data-lucide="navigation"></i>
+                    <span>Dispatch Trip</span>
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Dispatch Board -->
+            <section class="card dispatch-board-card">
+              <div class="card-header flex-between">
+                <div class="header-icon-title">
+                  <i data-lucide="layout-grid" class="icon-blue"></i>
+                  <h2>Live Dispatch Board</h2>
+                </div>
+                <div class="filter-pills" id="statusFilterContainer">
+                  <button class="filter-pill active" data-status="all">All</button>
+                  <button class="filter-pill" data-status="Draft">Draft</button>
+                  <button class="filter-pill" data-status="Dispatched">Dispatched</button>
+                  <button class="filter-pill" data-status="Completed">Completed</button>
+                  <button class="filter-pill" data-status="Cancelled">Cancelled</button>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div class="empty-state hidden" id="tripsEmptyState">
+                <i data-lucide="package-open" class="empty-icon"></i>
+                <h3>No Trips Found</h3>
+                <p>Try resetting the filters or creating a new trip above.</p>
+              </div>
+
+              <!-- Grid/List of active trips -->
+              <div class="trips-list" id="tripsGrid">
+                <!-- Trip cards inserted dynamically -->
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column: Status & Timeline -->
+          <div class="right-column">
+            <!-- Vehicles Availability Status -->
+            <section class="card sidebar-status-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="truck" class="icon-blue"></i>
+                  <h2>Vehicle Fleet Status</h2>
+                </div>
+              </div>
+              <div class="status-items-list" id="vehicleStatusList">
+                <!-- Dynamic status -->
+              </div>
+            </section>
+
+            <!-- Drivers Availability Status -->
+            <section class="card sidebar-status-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="users" class="icon-blue"></i>
+                  <h2>Driver Availability</h2>
+                </div>
+              </div>
+              <div class="status-items-list" id="driverStatusList">
+                <!-- Dynamic status -->
+              </div>
+            </section>
+
+            <!-- Active Trip Timeline -->
+            <section class="card timeline-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="history" class="icon-blue"></i>
+                  <h2>Live Dispatch Timeline</h2>
+                </div>
+              </div>
+              <div class="timeline-wrapper">
+                <div class="timeline" id="timelineList">
+                  <!-- Dynamic timeline log events -->
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Lucide invocation -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+  <script src="js/trips.js" defer></script>
+</body>
+</html>
