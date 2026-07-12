@@ -36,7 +36,7 @@ const register = asyncHandler(async (req, res) => {
     throw new AppError('Password must be at least 8 characters long', 400);
   }
 
-  const roleResult = await pool.query('SELECT id FROM roles WHERE user_id = $1', [role_id]);
+  const roleResult = await pool.query('SELECT role_id FROM roles WHERE role_id = $1', [role_id]);
 
   if (roleResult.rowCount === 0) {
     throw new AppError('Invalid role_id', 400);
@@ -78,7 +78,7 @@ const login = asyncHandler(async (req, res) => {
   const result = await pool.query(
     `SELECT u.user_id, u.full_name, u.password_hash, r.role_name
      FROM users u
-     INNER JOIN roles r ON r.user_id = u.role_id
+     INNER JOIN roles r ON r.role_id = u.role_id
      WHERE u.email = $1`,
     [normalizedEmail]
   );
@@ -94,7 +94,7 @@ const login = asyncHandler(async (req, res) => {
     throw new AppError('Invalid email or password', 401);
   }
 
-  const token = signToken(user.id);
+  const token = signToken(user.user_id);
 
   res.status(200).json({
     status: 'OK',
@@ -110,9 +110,9 @@ const login = asyncHandler(async (req, res) => {
 
 const getProfile = asyncHandler(async (req, res) => {
   const result = await pool.query(
-    `SELECT u.user_id, u.full_name, u.email, u.phone, u.role_id, r.role_name, u.created_at, u.updated_at
+    `SELECT u.user_id, u.full_name, u.email, u.phone, u.role_id, r.role_name, u.created_at
      FROM users u
-     INNER JOIN roles r ON r.user_id = u.role_id
+     INNER JOIN roles r ON r.role_id = u.role_id
      WHERE u.user_id = $1`,
     [req.user.user_id]
   );
