@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Settings - TransitOps ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/settings.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <i data-lucide="compass" class="logo-icon"></i>
+          <span class="logo-text">TransitOps</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="trips.html" class="nav-item">
+          <i data-lucide="route" class="nav-icon"></i>
+          <span>Trip Dispatcher</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3" class="nav-icon"></i>
+          <span>Analytics</span>
+        </a>
+        <a href="rbac.html" class="nav-item">
+          <i data-lucide="shield-check" class="nav-icon"></i>
+          <span>Access Control</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+          <i data-lucide="settings" class="nav-icon"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User avatar" class="avatar">
+          <div class="user-info">
+            <span class="user-name">Sarah Jenkins</span>
+            <span class="user-role">Lead Dispatcher</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h1 class="page-title">System Settings</h1>
+        </div>
+        <div class="navbar-right">
+          <!-- Theme Switcher Pill -->
+          <div class="theme-switch-container">
+            <button class="theme-toggle-btn active" id="lightThemeBtn" title="Light Theme">
+              <i data-lucide="sun"></i>
+            </button>
+            <button class="theme-toggle-btn" id="darkThemeBtn" title="Dark Theme">
+              <i data-lucide="moon"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Inner Content -->
+      <div class="content-body">
+        <div class="settings-grid">
+          <!-- Left Column: Settings Categories -->
+          <div class="settings-form-column">
+            <!-- Profile Settings Card -->
+            <section class="card settings-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="user" class="icon-blue"></i>
+                  <h2>Profile & Account</h2>
+                </div>
+              </div>
+              <form id="profileForm" class="settings-form">
+                <div class="avatar-upload-group">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User avatar" class="avatar-large">
+                  <div>
+                    <button type="button" class="btn btn-secondary btn-sm">Upload New Image</button>
+                    <p class="form-helper">JPG, PNG or GIF. Max size 2MB.</p>
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="profName">Full Name</label>
+                    <input type="text" id="profName" value="Sarah Jenkins" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="profEmail">Email Address</label>
+                    <input type="email" id="profEmail" value="s.jenkins@transitops.io" required>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Company Settings Card -->
+            <section class="card settings-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="building-2" class="icon-blue"></i>
+                  <h2>Company Information</h2>
+                </div>
+              </div>
+              <form id="companyForm" class="settings-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="compName">Company Name</label>
+                    <input type="text" id="compName" value="TransitOps Logistics LLC" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="compTax">Tax Identification ID</label>
+                    <input type="text" id="compTax" value="TX-882-990-11A" required>
+                  </div>
+                  <div class="form-group span-2">
+                    <label for="compAddr">Corporate Address</label>
+                    <input type="text" id="compAddr" value="840 Interstate Blvd, Suite 200, Chicago, IL" required>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary btn-sm">Save Details</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Security & Password Card -->
+            <section class="card settings-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="key" class="icon-blue"></i>
+                  <h2>Change Password</h2>
+                </div>
+              </div>
+              <form id="securityForm" class="settings-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="currentPass">Current Password</label>
+                    <input type="password" id="currentPass" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="newPass">New Password</label>
+                    <input type="password" id="newPass" required>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary btn-sm">Update Password</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- API Access Keys Card -->
+            <section class="card settings-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="code" class="icon-blue"></i>
+                  <h2>API Keys & Developers</h2>
+                </div>
+              </div>
+              <div class="api-keys-wrapper">
+                <p class="form-helper">Use API keys to integrate TransitOps with external telematics and ERP extensions.</p>
+                <div class="api-key-item">
+                  <div class="api-key-details">
+                    <span class="key-label">Production API Key</span>
+                    <span class="key-mask" id="productionApiKey">pk_live_51Msz8BsgGfXyFm9K00e9a...</span>
+                  </div>
+                  <button class="btn btn-secondary btn-sm" id="copyApiKeyBtn">
+                    <i data-lucide="copy"></i>
+                    <span>Copy</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Notifications Config -->
+            <section class="card settings-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="bell" class="icon-blue"></i>
+                  <h2>Notification Settings</h2>
+                </div>
+              </div>
+              <div class="notification-checkboxes">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="emailDispatch" checked>
+                  <div class="checkbox-labels">
+                    <label for="emailDispatch">Email on Dispatch</label>
+                    <p class="form-helper">Send automated confirmation when trips are dispatched.</p>
+                  </div>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="smsAlerts" checked>
+                  <div class="checkbox-labels">
+                    <label for="smsAlerts">SMS Delay Warnings</label>
+                    <p class="form-helper">Notify fleet managers via SMS when drivers report delays.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column: Database, Status, System health -->
+          <div class="settings-sidebar-column">
+            <!-- Database Status Card -->
+            <section class="card health-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="database" class="icon-blue"></i>
+                  <h2>Database Status</h2>
+                </div>
+              </div>
+              <div class="health-metrics-list">
+                <div class="metric-line">
+                  <span class="metric-label">DB Engine</span>
+                  <span class="metric-status success">PostgreSQL 15</span>
+                </div>
+                <div class="metric-line">
+                  <span class="metric-label">Active Records</span>
+                  <span class="metric-value">1,482,902</span>
+                </div>
+                <div class="metric-line">
+                  <span class="metric-label">Index Health</span>
+                  <span class="metric-status success">99.8% Optimized</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- System Health Card -->
+            <section class="card health-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="activity" class="icon-blue"></i>
+                  <h2>System Health</h2>
+                </div>
+              </div>
+              <div class="health-metrics-list">
+                <div class="metric-line">
+                  <span class="metric-label">Server Status</span>
+                  <span class="metric-status success">
+                    <span class="status-dot dot-success"></span> Online
+                  </span>
+                </div>
+                <div class="metric-line">
+                  <span class="metric-label">API Latency</span>
+                  <span class="metric-value">42 ms</span>
+                </div>
+                <div class="metric-line">
+                  <span class="metric-label">CPU Load</span>
+                  <span class="metric-value">14.2%</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Backup Status Card -->
+            <section class="card health-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="cloud-lightning" class="icon-blue"></i>
+                  <h2>Backup & Recovery</h2>
+                </div>
+              </div>
+              <div class="health-metrics-list">
+                <div class="metric-line">
+                  <span class="metric-label">Auto Backup</span>
+                  <span class="metric-status success">Enabled (Daily)</span>
+                </div>
+                <div class="metric-line">
+                  <span class="metric-label">Last Backup</span>
+                  <span class="metric-value">Today, 03:00 AM</span>
+                </div>
+                <button class="btn btn-secondary btn-sm w-full" id="triggerBackupBtn">
+                  <i data-lucide="refresh-cw"></i>
+                  <span>Backup Now</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- About Application -->
+            <div class="card about-card">
+              <h3>TransitOps ERP</h3>
+              <p class="about-version">Version 2.4.0-Production</p>
+              <p class="about-desc">Built using high-performance logistics standards. Real-time telemetry, routing engines, and cargo safety checks integrated.</p>
+              <div class="about-footer">
+                <span>© 2026 TransitOps Inc.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+  <script src="js/settings.js" defer></script>
+</body>
+</html>

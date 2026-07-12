@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Control (RBAC) - TransitOps ERP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/rbac.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <i data-lucide="compass" class="logo-icon"></i>
+          <span class="logo-text">TransitOps</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="trips.html" class="nav-item">
+          <i data-lucide="route" class="nav-icon"></i>
+          <span>Trip Dispatcher</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i data-lucide="bar-chart-3" class="nav-icon"></i>
+          <span>Analytics</span>
+        </a>
+        <a href="rbac.html" class="nav-item active">
+          <i data-lucide="shield-check" class="nav-icon"></i>
+          <span>Access Control</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i data-lucide="settings" class="nav-icon"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User avatar" class="avatar">
+          <div class="user-info">
+            <span class="user-name">Sarah Jenkins</span>
+            <span class="user-role">Lead Dispatcher</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <h1 class="page-title">Access Control (RBAC)</h1>
+        </div>
+        <div class="navbar-right">
+          <div class="search-wrapper">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="userSearch" placeholder="Search users or roles...">
+          </div>
+          <button class="btn btn-primary btn-sm" id="addUserBtn">
+            <i data-lucide="user-plus"></i>
+            <span>Add User</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Inner Content -->
+      <div class="content-body">
+        <div class="rbac-grid">
+          <!-- Main Left Panel: Users & Roles lists -->
+          <div class="rbac-main-column">
+            <!-- Users Table Card -->
+            <section class="card table-card">
+              <div class="card-header flex-between">
+                <div class="header-icon-title">
+                  <i data-lucide="users" class="icon-blue"></i>
+                  <h2>System Users</h2>
+                </div>
+                <!-- Role filter dropdown -->
+                <div class="dropdown-filter">
+                  <label for="roleFilter" class="sr-only">Filter by Role</label>
+                  <select id="roleFilter" class="select-sm">
+                    <option value="all">All Roles</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Fleet Manager">Fleet Manager</option>
+                    <option value="Dispatcher">Dispatcher</option>
+                    <option value="Safety Officer">Safety Officer</option>
+                    <option value="Financial Analyst">Financial Analyst</option>
+                    <option value="Driver">Driver</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Responsive Table Container -->
+              <div class="table-responsive">
+                <table class="rbac-table" id="usersTable">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Email</th>
+                      <th>Assigned Role</th>
+                      <th>Status</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usersTableBody">
+                    <!-- Loaded dynamically via js -->
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Roles Description List -->
+            <section class="card table-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="key-round" class="icon-blue"></i>
+                  <h2>Security Roles Definition</h2>
+                </div>
+              </div>
+              <div class="roles-definition-list" id="rolesList">
+                <!-- Rendered dynamically -->
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column: Permission Matrix -->
+          <div class="rbac-sidebar-column">
+            <section class="card matrix-card">
+              <div class="card-header">
+                <div class="header-icon-title">
+                  <i data-lucide="shield-alert" class="icon-blue"></i>
+                  <h2>Role-Permission Matrix</h2>
+                </div>
+              </div>
+              <div class="matrix-info">
+                <p>Configure permission maps for security roles. Any change here will affect all users linked with the role.</p>
+              </div>
+              <div class="matrix-table-wrapper">
+                <table class="matrix-table" id="matrixTable">
+                  <thead>
+                    <tr>
+                      <th>Permission</th>
+                      <th title="Admin">ADM</th>
+                      <th title="Fleet Manager">FLM</th>
+                      <th title="Dispatcher">DIS</th>
+                      <th title="Safety Officer">SAF</th>
+                      <th title="Financial Analyst">FIN</th>
+                      <th title="Driver">DRV</th>
+                    </tr>
+                  </thead>
+                  <tbody id="matrixTableBody">
+                    <!-- Toggles rendered dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create / Edit User Modal Wrapper -->
+  <div class="modal-overlay hidden" id="userModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add System User</h3>
+        <button class="close-modal-btn" id="closeModalBtn">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <form id="userForm">
+        <input type="hidden" id="editUserId">
+        <div class="form-group mb-4">
+          <label for="userNameInput">Full Name</label>
+          <input type="text" id="userNameInput" placeholder="Jane Doe" required>
+        </div>
+        <div class="form-group mb-4">
+          <label for="userEmailInput">Email Address</label>
+          <input type="email" id="userEmailInput" placeholder="j.doe@transitops.io" required>
+        </div>
+        <div class="form-group mb-4">
+          <label for="userRoleInput">Assign Role</label>
+          <select id="userRoleInput" required>
+            <option value="Admin">Admin</option>
+            <option value="Fleet Manager">Fleet Manager</option>
+            <option value="Dispatcher" selected>Dispatcher</option>
+            <option value="Safety Officer">Safety Officer</option>
+            <option value="Financial Analyst">Financial Analyst</option>
+            <option value="Driver">Driver</option>
+          </select>
+        </div>
+        <div class="form-group mb-4">
+          <label for="userStatusInput">User Status</label>
+          <select id="userStatusInput" required>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+  <script src="js/rbac.js" defer></script>
+</body>
+</html>
