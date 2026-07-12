@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Vehicle</title>
+
+<link rel="stylesheet" href="addVehicle.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Add New Vehicle</h2>
+
+<form id="vehicleForm">
+
+<div class="row">
+
+<div class="input-box">
+<label>Registration Number</label>
+<input type="text" placeholder="GJ01AB1234" required>
+</div>
+
+<div class="input-box">
+<label>Vehicle Type</label>
+<select required>
+<option>Select</option>
+<option>Truck</option>
+<option>Van</option>
+<option>Mini Truck</option>
+<option>Pickup</option>
+</select>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Brand</label>
+<input type="text" placeholder="Tata">
+</div>
+
+<div class="input-box">
+<label>Model</label>
+<input type="text" placeholder="Ultra">
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Manufacture Year</label>
+<input type="number">
+</div>
+
+<div class="input-box">
+<label>Capacity (Kg)</label>
+<input type="number">
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Odometer (Km)</label>
+<input type="number">
+</div>
+
+<div class="input-box">
+<label>Purchase Cost</label>
+<input type="number">
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Purchase Date</label>
+<input type="date">
+</div>
+
+<div class="input-box">
+<label>Insurance Expiry</label>
+<input type="date">
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="input-box">
+<label>Pollution Certificate Expiry</label>
+<input type="date">
+</div>
+
+<div class="input-box">
+<label>Status</label>
+
+<select>
+
+<option>Available</option>
+<option>On Trip</option>
+<option>Maintenance</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button type="reset" class="cancel">
+Cancel
+</button>
+
+<button type="submit" class="save">
+Save Vehicle
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+<script src="addVehicle.js"></script>
+
+</body>
+</html>
