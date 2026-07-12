@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TransitOps - Vehicle Registry</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-active { background-color: #f59e0b; color: white; border-radius: 6px; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-900 text-white flex flex-col">
+    <div class="p-6 text-2xl font-bold border-b border-gray-800">TransitOps</div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <li onclick="navigate('dashboard')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-home"></i> Dashboard</li>
+      <li onclick="navigate('fleet')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-truck"></i> Fleet</li>
+      <li onclick="navigate('vehicleRegistry')" class="p-3 sidebar-active hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-car"></i> Vehicle Registry</li>
+      <li onclick="navigate('drivers')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-users"></i> Drivers</li>
+      <li onclick="navigate('trips')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-route"></i> Trips</li>
+      <li onclick="navigate('maintenance')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-tools"></i> Maintenance</li>
+      <li onclick="navigate('fuel')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-gas-pump"></i> Fuel & Expenses</li>
+      <li onclick="navigate('analytics')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-chart-bar"></i> Analytics</li>
+      <li onclick="navigate('settings')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-cog"></i> Settings</li>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="bg-white border-b px-6 py-4 flex items-center justify-between">
+      <input id="searchInput" onkeyup="filterVehicles()" type="text" placeholder="Search reg. no..." 
+             class="w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+      <div class="flex items-center gap-4">
+        <span class="font-medium">Raven K.</span>
+        <span class="bg-blue-600 text-white text-sm px-3 py-1 rounded-full">Dispatcher</span>
+      </div>
+    </div>
+
+    <div id="pageContent" class="flex-1 overflow-auto p-6"></div>
+  </div>
+</div>
+
+<!-- Add Vehicle Modal -->
+<div id="vehicleModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl w-full max-w-lg p-8">
+    <h2 class="text-2xl font-semibold mb-6">Add New Vehicle</h2>
+    <form onsubmit="saveVehicle(event)">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="block text-sm font-medium mb-1">Registration No.</label>
+          <input id="regNo" type="text" placeholder="e.g. GJ01AB4521" required class="w-full px-4 py-3 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Name / Model</label>
+          <input id="model" type="text" placeholder="VAN-05" required class="w-full px-4 py-3 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Type</label>
+          <select id="type" class="w-full px-4 py-3 border rounded-lg">
+            <option value="Van">Van</option>
+            <option value="Truck">Truck</option>
+            <option value="Mini">Mini</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Capacity</label>
+          <input id="capacity" type="text" placeholder="500 kg" required class="w-full px-4 py-3 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Odometer (km)</label>
+          <input id="odometer" type="number" placeholder="74000" required class="w-full px-4 py-3 border rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Acquisition Cost (₹)</label>
+          <input id="cost" type="number" placeholder="6200000" required class="w-full px-4 py-3 border rounded-lg">
+        </div>
+      </div>
+      <div class="flex gap-3 mt-8">
+        <button type="button" onclick="closeVehicleModal()" class="flex-1 py-3 border rounded-xl">Cancel</button>
+        <button type="submit" class="flex-1 py-3 bg-orange-500 text-white rounded-xl">Add Vehicle</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Sample Vehicles
+let vehicles = [
+  { reg: "GJ01AB4521", model: "VAN-05", type: "Van", capacity: "500 kg", odometer: "74,000", cost: "6,20,000", status: "Available" },
+  { reg: "GJ01AB9981", model: "TRUCK-11", type: "Truck", capacity: "5 Ton", odometer: "152,000", cost: "24,50,000", status: "On Trip" },
+  { reg: "GJ01AB3120", model: "MINI-03", type: "Mini", capacity: "1 Ton", odometer: "66,000", cost: "4,10,000", status: "In Shop" },
+  { reg: "GJ01AB0008", model: "VAN-04", type: "Van", capacity: "750 kg", odometer: "241,900", cost: "5,40,000", status: "Retired" }
+];
+
+function navigate(page) {
+  if (page === 'vehicleRegistry') renderVehicleRegistry();
+  else document.getElementById('pageContent').innerHTML = `<h1 class="text-3xl font-semibold">${page}</h1>`;
+}
+
+function renderVehicleRegistry() {
+  let html = `
+    <h1 class="text-3xl font-semibold mb-6">Vehicle Registry</h1>
+    
+    <div class="flex gap-4 mb-6">
+      <select class="px-4 py-2 border border-gray-300 rounded-lg">
+        <option>Type: All</option>
+        <option>Van</option>
+        <option>Truck</option>
+        <option>Mini</option>
+      </select>
+      <select class="px-4 py-2 border border-gray-300 rounded-lg">
+        <option>Status: All</option>
+        <option>Available</option>
+        <option>On Trip</option>
+        <option>In Shop</option>
+        <option>Retired</option>
+      </select>
+      <button onclick="showVehicleModal()" 
+              class="ml-auto bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl flex items-center gap-2">
+        <i class="fas fa-plus"></i> Add Vehicle
+      </button>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <table class="w-full">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-4 text-left">REG. NO. (UNIQUE)</th>
+            <th class="px-6 py-4 text-left">NAME/MODEL</th>
+            <th class="px-6 py-4 text-left">TYPE</th>
+            <th class="px-6 py-4 text-left">CAPACITY</th>
+            <th class="px-6 py-4 text-left">ODOMETER</th>
+            <th class="px-6 py-4 text-left">ACQ. COST</th>
+            <th class="px-6 py-4 text-left">STATUS</th>
+          </tr>
+        </thead>
+        <tbody id="vehicleBody" class="divide-y"></tbody>
+      </table>
+    </div>
+
+    <p class="mt-6 text-orange-600 text-sm">
+      Rule: Registration No. must be unique • Retired/In Shop vehicles are hidden from Trip Dispatcher
+    </p>
+  `;
+
+  document.getElementById('pageContent').innerHTML = html;
+  renderVehicleTable();
+}
+
+function renderVehicleTable(filtered = vehicles) {
+  const tbody = document.getElementById('vehicleBody');
+  tbody.innerHTML = filtered.map(v => `
+    <tr class="hover:bg-gray-50">
+      <td class="px-6 py-4 font-mono">${v.reg}</td>
+      <td class="px-6 py-4">${v.model}</td>
+      <td class="px-6 py-4">${v.type}</td>
+      <td class="px-6 py-4">${v.capacity}</td>
+      <td class="px-6 py-4">${v.odometer} km</td>
+      <td class="px-6 py-4">₹${v.cost}</td>
+      <td class="px-6 py-4">
+        <span class="px-4 py-1 rounded-full text-sm font-medium
+          ${v.status === 'Available' ? 'bg-green-100 text-green-700' : ''}
+          ${v.status === 'On Trip' ? 'bg-blue-100 text-blue-700' : ''}
+          ${v.status === 'In Shop' ? 'bg-orange-100 text-orange-700' : ''}
+          ${v.status === 'Retired' ? 'bg-red-100 text-red-700' : ''}">
+          ${v.status}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showVehicleModal() {
+  document.getElementById('vehicleModal').classList.remove('hidden');
+}
+
+function closeVehicleModal() {
+  document.getElementById('vehicleModal').classList.add('hidden');
+}
+
+function saveVehicle(e) {
+  e.preventDefault();
+  const newVehicle = {
+    reg: document.getElementById('regNo').value,
+    model: document.getElementById('model').value,
+    type: document.getElementById('type').value,
+    capacity: document.getElementById('capacity').value,
+    odometer: document.getElementById('odometer').value,
+    cost: document.getElementById('cost').value,
+    status: "Available"
+  };
+  vehicles.unshift(newVehicle);
+  closeVehicleModal();
+  renderVehicleTable();
+  alert("✅ New vehicle added successfully!");
+}
+
+function filterVehicles() {
+  const term = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = vehicles.filter(v => 
+    v.reg.toLowerCase().includes(term) || 
+    v.model.toLowerCase().includes(term)
+  );
+  renderVehicleTable(filtered);
+}
+
+// Initialize with Vehicle Registry
+navigate('vehicleRegistry');
+</script>
+
+</body>
+</html>
