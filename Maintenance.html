@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TransitOps - Fleet Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-active { background-color: #f59e0b; color: white; border-radius: 6px; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-900 text-white flex flex-col">
+    <div class="p-6 text-2xl font-bold border-b border-gray-800">TransitOps</div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <li onclick="navigate('dashboard')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-home"></i> Dashboard</li>
+      <li onclick="navigate('fleet')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-truck"></i> Fleet</li>
+      <li onclick="navigate('drivers')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-users"></i> Drivers</li>
+      <li onclick="navigate('trips')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-route"></i> Trips</li>
+      <li onclick="navigate('maintenance')" class="p-3 sidebar-active hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-tools"></i> Maintenance</li>
+      <li onclick="navigate('fuel')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-gas-pump"></i> Fuel & Expenses</li>
+      <li onclick="navigate('analytics')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-chart-bar"></i> Analytics</li>
+      <li onclick="navigate('settings')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-cog"></i> Settings</li>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="bg-white border-b px-6 py-4 flex items-center justify-between">
+      <input id="searchInput" type="text" placeholder="Search vehicles..." 
+             class="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+      <div class="flex items-center gap-4">
+        <span class="font-medium">Raven K.</span>
+        <span class="bg-blue-600 text-white text-sm px-3 py-1 rounded-full">Dispatcher</span>
+      </div>
+    </div>
+
+    <div id="pageContent" class="flex-1 overflow-auto p-6"></div>
+  </div>
+</div>
+
+<script>
+// Sample Service Logs
+let serviceLogs = [
+  { vehicle: "VAN-05", service: "Oil Change", cost: "2,500", status: "In Shop" },
+  { vehicle: "TRUCK-11", service: "Engine Repair", cost: "18,000", status: "Completed" },
+  { vehicle: "MINI-03", service: "Tire Replace", cost: "6,200", status: "In Shop" }
+];
+
+function navigate(page) {
+  if (page === 'maintenance') renderMaintenance();
+  else document.getElementById('pageContent').innerHTML = `<h1 class="text-3xl font-semibold">${page}</h1>`;
+}
+
+function renderMaintenance() {
+  const html = `
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-3xl font-semibold mb-8">Maintenance</h1>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- LOG SERVICE RECORD -->
+        <div class="bg-white rounded-2xl shadow-sm p-8">
+          <h2 class="text-xl font-semibold mb-6">LOG SERVICE RECORD</h2>
+          
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium mb-2">VEHICLE</label>
+              <input id="logVehicle" type="text" placeholder="Enter vehicle number" 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">SERVICE TYPE</label>
+              <input id="logService" type="text" placeholder="e.g. Oil Change" 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium mb-2">COST (₹)</label>
+                <input id="logCost" type="number" placeholder="2500" 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">DATE</label>
+                <input id="logDate" type="text" value="07/07/2026" 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">STATUS</label>
+              <select id="logStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <option value="Active">Active</option>
+                <option value="In Shop">In Shop</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="saveLogRecord()" 
+                  class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-semibold text-lg">
+            Save
+          </button>
+        </div>
+
+        <!-- SERVICE LOG TABLE -->
+        <div class="bg-white rounded-2xl shadow-sm p-8">
+          <h2 class="text-xl font-semibold mb-6">SERVICE LOG</h2>
+          <table class="w-full">
+            <thead>
+              <tr class="border-b text-left">
+                <th class="py-4">VEHICLE</th>
+                <th class="py-4">SERVICE</th>
+                <th class="py-4">COST</th>
+                <th class="py-4">STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="serviceTableBody" class="divide-y"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Simplified Status Flow -->
+      <div class="mt-10 bg-white rounded-2xl p-8">
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3">
+            <span class="w-4 h-4 bg-green-500 rounded-full"></span>
+            <span class="font-medium text-green-700">Available</span>
+          </div>
+          <div class="flex-1 h-px bg-gray-300"></div>
+          <div class="text-sm text-gray-500">creating service record</div>
+        </div>
+
+        <div class="flex items-center gap-6 mt-8">
+          <div class="flex items-center gap-3">
+            <span class="text-orange-600 font-medium">In Shop</span>
+          </div>
+          <div class="flex-1 h-px bg-gray-300"></div>
+          <div class="text-sm text-gray-500">closing record & refresh</div>
+        </div>
+
+        <p class="mt-6 text-orange-600 text-sm font-medium">
+          Note: In Shop vehicles are removed from the dispatch pool.
+        </p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('pageContent').innerHTML = html;
+  renderServiceTable();
+}
+
+function renderServiceTable() {
+  const tbody = document.getElementById('serviceTableBody');
+  tbody.innerHTML = serviceLogs.map(log => `
+    <tr class="hover:bg-gray-50">
+      <td class="py-4 font-medium">${log.vehicle}</td>
+      <td class="py-4">${log.service}</td>
+      <td class="py-4">₹${log.cost}</td>
+      <td class="py-4">
+        <span class="px-5 py-1.5 rounded-full text-sm font-medium
+          ${log.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">
+          ${log.status}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function saveLogRecord() {
+  const vehicle = document.getElementById('logVehicle').value.trim();
+  const service = document.getElementById('logService').value.trim();
+  const cost = document.getElementById('logCost').value.trim();
+
+  if (!vehicle || !service) {
+    alert("Please fill Vehicle and Service Type");
+    return;
+  }
+
+  serviceLogs.unshift({
+    vehicle: vehicle || "NEW-VEHICLE",
+    service: service,
+    cost: cost || "0",
+    status: "In Shop"
+  });
+
+  renderServiceTable();
+  alert("✅ Service record saved successfully!");
+}
+
+// Initialize
+navigate('maintenance');
+</script>
+
+</body>
+</html>
