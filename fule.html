@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TransitOps - Fuel & Expenses</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .sidebar-active { background-color: #f59e0b; color: white; border-radius: 6px; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <div class="w-64 bg-gray-900 text-white flex flex-col">
+    <div class="p-6 text-2xl font-bold border-b border-gray-800">TransitOps</div>
+    <nav class="flex-1 p-4 space-y-1 text-sm">
+      <li onclick="navigate('dashboard')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-home"></i> Dashboard</li>
+      <li onclick="navigate('fleet')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-truck"></i> Fleet</li>
+      <li onclick="navigate('drivers')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-users"></i> Drivers</li>
+      <li onclick="navigate('trips')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-route"></i> Trips</li>
+      <li onclick="navigate('maintenance')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-tools"></i> Maintenance</li>
+      <li onclick="navigate('fuel')" class="p-3 sidebar-active hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-gas-pump"></i> Fuel & Expenses</li>
+      <li onclick="navigate('analytics')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-chart-bar"></i> Analytics</li>
+      <li onclick="navigate('settings')" class="p-3 hover:bg-gray-800 cursor-pointer flex items-center gap-3"><i class="fas fa-cog"></i> Settings</li>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="bg-white border-b px-6 py-4 flex items-center justify-between">
+      <input id="searchInput" onkeyup="filterFuelLogs()" type="text" placeholder="Search vehicle or trip..." 
+             class="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+      <div class="flex items-center gap-4">
+        <span class="font-medium">Raven K.</span>
+        <span class="bg-blue-600 text-white text-sm px-3 py-1 rounded-full">Dispatcher</span>
+      </div>
+    </div>
+
+    <div id="pageContent" class="flex-1 overflow-auto p-6"></div>
+  </div>
+</div>
+
+<!-- Log Fuel Modal -->
+<div id="fuelModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl w-full max-w-md p-8">
+    <h2 class="text-2xl font-semibold mb-6">Log Fuel</h2>
+    <form onsubmit="saveFuelLog(event)">
+      <div class="space-y-4">
+        <input id="fVehicle" type="text" placeholder="Vehicle (e.g. VAN-05)" required class="w-full px-4 py-3 border rounded-lg">
+        <input id="fDate" type="text" value="07/07/2026" required class="w-full px-4 py-3 border rounded-lg">
+        <input id="fLiters" type="number" placeholder="Liters" required class="w-full px-4 py-3 border rounded-lg">
+        <input id="fCost" type="number" placeholder="Cost (₹)" required class="w-full px-4 py-3 border rounded-lg">
+      </div>
+      <div class="flex gap-3 mt-8">
+        <button type="button" onclick="closeFuelModal()" class="flex-1 py-3 border rounded-xl">Cancel</button>
+        <button type="submit" class="flex-1 py-3 bg-orange-500 text-white rounded-xl">Save Fuel Log</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Sample Data
+let fuelLogs = [
+  { vehicle: "VAN-05", vehicleNo: "DL-7C-4567", date: "05 Jul 2026", liters: "42 L", cost: "3,150" },
+  { vehicle: "TRUCK-11", vehicleNo: "DL-8B-8921", date: "06 Jul 2026", liters: "110 L", cost: "8,400" },
+  { vehicle: "MINI-03", vehicleNo: "DL-9A-1123", date: "06 Jul 2026", liters: "28 L", cost: "2,050" }
+];
+
+let expenses = [
+  { trip: "TR001", vehicle: "VAN-05", toll: "120", other: "0", maint: "0", total: "Available" },
+  { trip: "TR002", vehicle: "TRK-12", toll: "340", other: "150", maint: "18,000", total: "Completed" }
+];
+
+function navigate(page) {
+  if (page === 'fuel') renderFuelPage();
+  else document.getElementById('pageContent').innerHTML = `<h1 class="text-3xl font-semibold">${page}</h1>`;
+}
+
+function renderFuelPage() {
+  let html = `
+    <h1 class="text-3xl font-semibold mb-8">Fuel & Expense Management</h1>
+    
+    <div class="flex justify-end gap-3 mb-6">
+      <button onclick="showFuelModal()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl flex items-center gap-2">
+        <i class="fas fa-plus"></i> Log Fuel
+      </button>
+      <button onclick="alert('Add Expense form coming soon...')" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl flex items-center gap-2">
+        <i class="fas fa-plus"></i> Add Expense
+      </button>
+      <button onclick="exportToPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2">
+        <i class="fas fa-file-pdf"></i> Export PDF
+      </button>
+    </div>
+
+    <!-- Fuel Logs -->
+    <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">FUEL LOGS</h2>
+      <table class="w-full" id="fuelTable">
+        <thead>
+          <tr class="border-b text-left">
+            <th class="py-4">VEHICLE</th>
+            <th class="py-4">VEHICLE NO.</th>
+            <th class="py-4">DATE</th>
+            <th class="py-4">LITERS</th>
+            <th class="py-4">FUEL COST</th>
+          </tr>
+        </thead>
+        <tbody id="fuelBody" class="divide-y"></tbody>
+      </table>
+    </div>
+
+    <!-- Other Expenses -->
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+      <h2 class="text-xl font-semibold mb-4">OTHER EXPENSES (TOLL / MISC)</h2>
+      <table class="w-full">
+        <thead>
+          <tr class="border-b text-left">
+            <th class="py-4">TRIP</th>
+            <th class="py-4">VEHICLE</th>
+            <th class="py-4">TOLL</th>
+            <th class="py-4">OTHER</th>
+            <th class="py-4">MAINT. (LINKED)</th>
+            <th class="py-4">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody id="expenseBody" class="divide-y"></tbody>
+      </table>
+    </div>
+
+    <div class="mt-8 text-right">
+      <p class="text-lg font-semibold">TOTAL OPERATIONAL COST (AUTO) = FUEL + MAINT 
+        <span class="text-orange-600 ml-4">₹34,070</span>
+      </p>
+    </div>
+  `;
+
+  document.getElementById('pageContent').innerHTML = html;
+  renderFuelTable();
+  renderExpenseTable();
+}
+
+function renderFuelTable() {
+  const tbody = document.getElementById('fuelBody');
+  tbody.innerHTML = fuelLogs.map(log => `
+    <tr class="hover:bg-gray-50">
+      <td class="py-4">${log.vehicle}</td>
+      <td class="py-4">${log.vehicleNo}</td>
+      <td class="py-4">${log.date}</td>
+      <td class="py-4">${log.liters}</td>
+      <td class="py-4">₹${log.cost}</td>
+    </tr>
+  `).join('');
+}
+
+function renderExpenseTable() {
+  const tbody = document.getElementById('expenseBody');
+  tbody.innerHTML = expenses.map(exp => `
+    <tr class="hover:bg-gray-50">
+      <td class="py-4">${exp.trip}</td>
+      <td class="py-4">${exp.vehicle}</td>
+      <td class="py-4">₹${exp.toll}</td>
+      <td class="py-4">₹${exp.other}</td>
+      <td class="py-4">₹${exp.maint}</td>
+      <td class="py-4">
+        <span class="px-4 py-1 rounded-full text-sm ${exp.total === 'Available' ? 'bg-green-100 text-green-700' : 'bg-green-100 text-green-700'}">
+          ${exp.total}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function showFuelModal() {
+  document.getElementById('fuelModal').classList.remove('hidden');
+}
+
+function closeFuelModal() {
+  document.getElementById('fuelModal').classList.add('hidden');
+}
+
+function saveFuelLog(e) {
+  e.preventDefault();
+  const vehicle = document.getElementById('fVehicle').value;
+  const liters = document.getElementById('fLiters').value;
+  const cost = document.getElementById('fCost').value;
+
+  fuelLogs.unshift({
+    vehicle: vehicle || "NEW-VEH",
+    vehicleNo: "DL-XX-XXXX",
+    date: "07 Jul 2026",
+    liters: `${liters} L`,
+    cost: cost
+  });
+
+  closeFuelModal();
+  renderFuelTable();
+  alert("✅ Fuel log saved successfully!");
+}
+
+function filterFuelLogs() {
+  const term = document.getElementById('searchInput').value.toLowerCase();
+  // Simple filter (you can enhance this)
+  console.log("Searching:", term);
+}
+
+function exportToPDF() {
+  alert("📄 Generating PDF report for Fuel & Expenses...\n\n(Report would be downloaded in real app)");
+}
+
+// Initialize Fuel Page
+navigate('fuel');
+</script>
+
+</body>
+</html>
