@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Registry</title>
+
+<link rel="stylesheet" href="vehicle.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2>Vehicle Registry</h2>
+
+        <button class="add-btn">+ Add Vehicle</button>
+    </div>
+
+    <div class="controls">
+
+        <input type="text" placeholder="Search Vehicle...">
+
+        <select>
+            <option>All Status</option>
+            <option>Available</option>
+            <option>On Trip</option>
+            <option>Maintenance</option>
+            <option>Retired</option>
+        </select>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Registration No.</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Capacity</th>
+                <th>Insurance</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td>GJ01AB1234</td>
+                <td>Truck</td>
+                <td>Tata</td>
+                <td>5000 Kg</td>
+                <td>15-12-2026</td>
+
+                <td>
+                    <span class="available">Available</span>
+                </td>
+
+                <td>
+
+                    <button class="edit">Edit</button>
+
+                    <button class="delete">Delete</button>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>GJ05XY7890</td>
+                <td>Van</td>
+                <td>Mahindra</td>
+                <td>1500 Kg</td>
+                <td>05-11-2026</td>
+
+                <td>
+                    <span class="trip">On Trip</span>
+                </td>
+
+                <td>
+
+                    <button class="edit">Edit</button>
+
+                    <button class="delete">Delete</button>
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script src="vehicle.js"></script>
+
+</body>
+</html>

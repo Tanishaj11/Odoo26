@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #030712;
+  --color-foreground: #f3f4f6;
+
+  --color-card: rgba(17, 24, 39, 0.45);
+  --color-card-foreground: #f3f4f6;
+  --color-card-border: rgba(255, 255, 255, 0.06);
+  
+  --color-primary: #06b6d4;
+  --color-primary-foreground: #030712;
+  
+  --color-secondary: #1f2937;
+  --color-secondary-foreground: #f3f4f6;
+  
+  --color-muted: rgba(156, 163, 175, 0.6);
+  --color-muted-foreground: #9ca3af;
+  
+  --color-accent: rgba(6, 182, 212, 0.15);
+  --color-accent-foreground: #06b6d4;
+  
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-warning: #f59e0b;
+  --color-success: #10b981;
+  
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-input: rgba(255, 255, 255, 0.05);
+  --color-ring: #06b6d4;
+
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.6));
+    }
+    50% {
+      opacity: .6;
+      filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.2));
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-panel-heavy {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(30, 41, 59, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(30, 41, 59, 0.45);
+  border-color: rgba(6, 182, 212, 0.2);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(6, 182, 212, 0.05);
+  transform: translateY(-2px);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+.glow-text-emerald {
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.glow-text-rose {
+  text-shadow: 0 0 8px rgba(244, 63, 94, 0.5);
+}
+
+/* Custom Scrollbar for modern dashboards */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.3);
+}
+
+/* Map placeholder patterns */
+.map-grid-bg {
+  background-color: #0c101b;
+  background-image: 
+    radial-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 0),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 0);
+  background-size: 24px 24px, 48px 48px, 48px 48px;
+  background-position: 0 0, 24px 24px, 24px 24px;
+}
+
+.glow-dot {
+  position: relative;
+}
+
+.glow-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  opacity: 0.75;
+}
