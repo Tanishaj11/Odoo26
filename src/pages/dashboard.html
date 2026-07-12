@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransitOps Dashboard</title>
+
+<link rel="stylesheet" href="dashboard.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<h2>TransitOps</h2>
+
+<ul>
+
+<li class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+
+<li><i class="fa-solid fa-truck"></i> Vehicles</li>
+
+<li><i class="fa-solid fa-user"></i> Drivers</li>
+
+<li><i class="fa-solid fa-route"></i> Trips</li>
+
+<li><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</li>
+
+<li><i class="fa-solid fa-gas-pump"></i> Fuel</li>
+
+<li><i class="fa-solid fa-wallet"></i> Expenses</li>
+
+<li><i class="fa-solid fa-chart-pie"></i> Analytics</li>
+
+<li><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+
+</ul>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<!-- Navbar -->
+
+<div class="navbar">
+
+<h2>Dashboard</h2>
+
+<div class="right">
+
+<input type="text" placeholder="Search">
+
+<i class="fa-solid fa-bell"></i>
+
+<img src="https://i.pravatar.cc/40">
+
+</div>
+
+</div>
+
+<!-- Cards -->
+
+<div class="cards">
+
+<div class="card">
+<h3>Active Vehicles</h3>
+<h1>54</h1>
+</div>
+
+<div class="card">
+<h3>Available Vehicles</h3>
+<h1>37</h1>
+</div>
+
+<div class="card">
+<h3>Active Trips</h3>
+<h1>16</h1>
+</div>
+
+<div class="card">
+<h3>Fleet Utilization</h3>
+<h1>78%</h1>
+</div>
+
+</div>
+
+<!-- Recent Trips -->
+
+<div class="table-section">
+
+<h2>Recent Trips</h2>
+
+<table>
+
+<tr>
+
+<th>Trip ID</th>
+
+<th>Driver</th>
+
+<th>Vehicle</th>
+
+<th>Status</th>
+
+</tr>
+
+<tr>
+
+<td>#1024</td>
+
+<td>Alex</td>
+
+<td>Tata Ace</td>
+
+<td><span class="green">Completed</span></td>
+
+</tr>
+
+<tr>
+
+<td>#1025</td>
+
+<td>John</td>
+
+<td>Eicher</td>
+
+<td><span class="orange">On Trip</span></td>
+
+</tr>
+
+<tr>
+
+<td>#1026</td>
+
+<td>David</td>
+
+<td>Truck-07</td>
+
+<td><span class="red">Maintenance</span></td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
