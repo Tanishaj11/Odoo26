@@ -110,7 +110,11 @@ const login = asyncHandler(async (req, res) => {
 
 const getProfile = asyncHandler(async (req, res) => {
   const result = await pool.query(
+<<<<<<< HEAD
     `SELECT u.user_id, u.full_name, u.email, u.phone, u.role_id, u.status, r.role_name, u.created_at
+=======
+    `SELECT u.user_id, u.full_name, u.email, u.phone, u.role_id, r.role_name, u.created_at
+>>>>>>> backend-tanisha
      FROM users u
      INNER JOIN roles r ON r.role_id = u.role_id
      WHERE u.user_id = $1`,

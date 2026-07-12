@@ -4,9 +4,18 @@ const driverRoutes = require('./driverRoutes');
 const expenseRoutes = require('./expenseRoutes');
 const fuelLogRoutes = require('./fuelLogRoutes');
 const healthRoutes = require('./healthRoutes');
+<<<<<<< HEAD
 const maintenanceRoutes = require('./maintenanceRoutes');
 const tripRoutes = require('./tripRoutes');
 const vehicleRoutes = require('./vehicleRoutes');
+=======
+const vehicleRoutes = require('./vehicleRoutes');
+const driverRoutes = require('./driverRoutes');
+const tripRoutes = require('./tripRoutes');
+const maintenanceRoutes = require('./maintenanceRoutes');
+const fuelLogRoutes = require('./fuelLogRoutes');
+const expenseRoutes = require('./expenseRoutes');
+>>>>>>> backend-tanisha
 
 const router = express.Router();
 
